@@ -1,0 +1,48 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{graphicx}
+
+\title{InsituNet Application for Cytoscape \\ \large User Documentation}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+In situ sequencing is a novel method to generate spatially-resolved, in situ RNA localization and expression data, at an almost single-cell resolution. Few methods, however, currently exist to analyze and visualize the complex data produced, which can encode the localization and expression of a million or more individual transcripts in a tissue section. Here, we present InsituNet, an innovative new application that converts in situ sequencing data into interactive network-based visualizations, where each unique transcript is a node in the network and edges represent the spatial co-expression relationships between transcripts. InsituNet enables the analysis of the relationships that exist between these transcripts and can uncover how spatial co-expression profiles change in different regions of the tissue or across different tissue sections. 
+\end{abstract}
+\clearpage
+
+\tableofcontents
+
+\clearpage
+
+\section{Introduction}
+Welcome to the InsituNet user documentation. This documentation aims to be a complete description of the functionality and user-interface of InsituNet. It also contains step-by-step examples of using InsituNet to analyze and visualize spatially-aware gene expression data.
+
+\begin{figure}[htb]
+	\caption{Screenshot of Cytoscape 3.5.1 running InsituNet}\label{fig:shot}
+	\centering
+	\includegraphics[width=\textwidth]{shot_1-shadow}
+\end{figure}
+
+InsituNet is an app (plugin) that runs inside of Cytoscape. Its chief purpose is taking \emph{in situ} sequencing data from a csv file such as ... Visually exploring it as in Figure \ref{fig:recon}. And finally creating networks that represent co-expressions that look like what you see in Figure \ref{fig:shot}.
+\begin{figure}[h]
+	\caption{InsituNet's reconstruction of the \emph{in situ} sequencing data.}\label{fig:recon}
+	\centering
+	\includegraphics[width=\textwidth]{reconstruction-shadow}
+\end{figure}
+
+\subsection{Input format}
+InsituNet requires a file of comma-separated values (csv) as input. In this file, there should be at least 3 columns, one for the name of the transcript, and two for x and y coordinates. 
+
+\section{User Interface}
+
+The InsituNet control panel is the central point for managing all aspects of InsituNet. It contains various collapsible sub-panels, each controlling a different aspect of how networks are created. This panel is only visible once a dataset has been successfully imported. On successful import, the name of the file will be visible at the top of the panel, in a combobox. This box allows switching between different datasets in the case that you import more than one. Directly to the right is a menubutton containing options for the selected dataset. `About' will allow the user to see how many unique types, and how many transcripts in total are within the selected dataset. `Delete' is reasonable self-explanatory. Directly below this is the sync-subpanel. This is initially empty, but when you choose to synchronise the layouts of your networks, those networks will appear here. You can also choose which layout algorithm to use, and remove datasets as required. 
+
+All the controls mentioned so far have been global; that is, they are not dataset-specific. All controls from here on will be applied specifically to the currently selected dataset. The first of the dataset-specific subpanels is the Network List. This list contains every network generated from this dataset. It also contains the `Overwrite selected network' option, which causes whatever network is highlighted to be reused when you generate a network (the default behaviour is to create a new entry)\footnote{Tip: If you are simply exploring a dataset or testing the parameters and don't need to retain the networks you are generating, it is recommended to use this option, as it will prevent your network list from becoming needlessly cluttered. Make sure to turn it off again if you generate a network you want to keep!}, as well as synchronisation-specific options.
+
+\section{Network Generation}
+
+\subsection{Filtering}
+With a real dataset, this network will need aditional filtering to be useful, as there will likely be issues with edge density. InsituNet provides various options for filtering the networks as they are created. The simplest filtering option is no filtering. This will create a network in which an edge is drawn between transcripts that exhibit any co-expression at all. No assessment of significance is made. The other options are the shuffle and hypergeometric methods, are both statistical methods for pruning edges in order to display only those interactions that are significant given the context.
+In situ sequencing provides extremely dense data on the detection of 1 million or more transcripts in a given tissue section. In such dense data, we would expect to observe a large number of co-expressions simply by chance, particularly for highly abundant transcripts. InsituNet aims to identify co-expressions between two transcripts that occur statistically more than expected given the abundance of the two transcripts in the data. These statistically significant interactions are more likely to represent true functional co-expressions. InsituNet can also identify transcripts that are co-expressed much less than expected given their abundance, as these transcripts may represent specific biomarkers of particular cell-types or tissue regions (e.g. those associated with pathology).
+
+\end{document}
