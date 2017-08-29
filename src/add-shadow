@@ -1,0 +1,6 @@
+#!/bin/bash
+
+FILENAME="$1"
+FILENAME="${FILENAME%.*}"
+convert "$1" -trim \( +clone -background grey25 -shadow 100x8+0+0 \) +swap -background transparent -layers merge +repage "$FILENAME-shadow.png"
+
