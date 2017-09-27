@@ -46,11 +46,20 @@ InsituNet requires a file of comma-separated values (csv) as input. In this file
 \end{tabular}
 \end{center}
 
-\section{Single-dataset panel options}
+\section{InsituNet control panel}
 
-The InsituNet control panel is the central point for managing all aspects of InsituNet. It contains various collapsible sub-panels, each controlling a different aspect of how networks are created. This panel is only visible once a dataset has been successfully imported. On successful import, the name of the file will be visible at the top of the panel, in a combobox. This box allows switching between different datasets in the case that you import more than one. Directly to the right is a menubutton containing options for the selected dataset. `About' will allow the user to see how many unique types, and how many transcripts in total are within the selected dataset. `Delete' is reasonable self-explanatory. Directly below this is the sync-subpanel. This is initially empty, but when you choose to synchronise the layouts of your networks, those networks will appear here. You can also choose which layout algorithm to use, and remove datasets as required. 
+The InsituNet control panel is the central point for managing all aspects of InsituNet. It contains various collapsible sub-panels, each controlling a different aspect of how networks are created. This panel is only visible once a dataset has been successfully imported. On successful import, the name of the file will be visible at the top of the panel, in a combobox. This box allows switching between different datasets in the case that you import more than one. Directly to the right is a menubutton containing options for the selected dataset. `About' will allow the user to see how many unique types, and how many transcripts in total are within the selected dataset. `Delete' is reasonable self-explanatory. Directly below this is the sync-subpanel. This is initially empty, but when you choose to synchronise the layouts of your networks, those networks will appear here. You can also choose which layout algorithm to use, and remove datasets as required. An additional option is available to highlight unique edges, which will change the network style to display edges that only occur in one synchronised dataset in red.
 
-All the controls mentioned so far have been global; that is, they are not dataset-specific. All controls from here on will be applied specifically to the currently selected dataset. The first of the dataset-specific subpanels is the Network List. This list contains every network generated from this dataset. It also contains the `Overwrite selected network' option, which causes whatever network is highlighted to be reused when you generate a network (the default behaviour is to create a new entry)\footnote{Tip: If you are simply exploring a dataset or testing the parameters and don't need to retain the networks you are generating, it is recommended to use this option, as it will prevent your network list from becoming needlessly cluttered. Make sure to turn it off again if you generate a network you want to keep!}, as well as synchronisation-specific options.
+\subsection{Network list}
+All the controls mentioned so far have been global; that is, they are not dataset-specific. All controls from here on will be applied specifically to the currently selected dataset. The first of the dataset-specific subpanels is the Network List. The network list panel contains all networks generated for this dataset. When clicked, the current network view will switch the the selected network. This panel also contains the `Overwrite selected network' option, which causes whatever network is highlighted to be reused when you generate a network (the default behaviour is to create a new entry)\footnote{Tip: If you are simply exploring a dataset or testing the parameters and don't need to retain the networks you are generating, it is recommended to use this option, as it will prevent your network list from becoming needlessly cluttered. Make sure to turn it off again if you generate a network you want to keep!}, as well as synchronisation-specific options.
+
+\subsection{Distance control}
+In the distance control panel the pixel distance to be used for defining co-expression may be set. This is also converted into microns at the given magnification for convenience.
+\subsection{Region selection}
+The region selection panel provides the option to use an automatic sliding window of given dimensions. If this is chosen, the dataset will be divided into the chosen number of rectangular windows with the given overlap. This panel also provides the option for using the full dataset as background. This changes the co-expression significance calculations to take into account the total abundance, rather than just the abundance within the selection area.
+\subsection{Significance filtering}
+The main panel for adjusting how significance is assessed. There are three test options, Label shuffle, hypergeometric test, and no filtering. No filtering will cause any co-expressed transcripts to have an edge drawn between them. The label shuffle and hypergeometric tests will both attempt to rate the significance of edges, as described in more detail in the next section.
+
 
 \subsection{Tissue reconstruction}
 The tissue reconstruction is likely where you will start in order to explore and check the data that you have just imported. It can initially be found at the bottom of the InsituNet panel. This view can be panned (left click + drag), zoomed (mouse wheel), and rotated (wheel / middle button + drag vertically) using the mouse. The controls as numbered in \ref{fig:recon_details} are as follows:
@@ -77,18 +86,12 @@ The tissue reconstruction is likely where you will start in order to explore and
 	\includegraphics[width=\textwidth]{recon_details-shadow}
 \end{figure}
 
-\subsection{Network list}
-\subsection{Distance control}
-\subsection{Region selection}
-\subsection{Significance filtering}
-
-\section{Multi-dataset and synchronisation panel options}
-\subsection{Sync list}
-\subsection{Things to note}
-
 \section{Network generation in detail}
+There are essentially two steps to generating InsituNet's networks: Firstly the number of co-expressions between all transcript pairs must be found, and secondly a significance attached assessed for these pairs.
 
 \subsection{Finding co-expressions}
+On import of a dataset, InsituNet creates a space-partitioning kd-tree in order to be able to rapidly find neighbours and perform various other range queries. This datastructure is then queried when a new network is generated to find all transcripts within a set euclidean distance of each other, as defined in the distance control panel.
+
 \subsection{Edge filtering}
 \subsection{Filtering (shuffle)}
 With a real dataset, this network will need aditional filtering to be useful, as there will likely be issues with edge density. InsituNet provides various options for filtering the networks as they are created. The simplest filtering option is no filtering. This will create a network in which an edge is drawn between transcripts that exhibit any co-expression at all. No assessment of significance is made. The other options are the shuffle and hypergeometric methods, are both statistical methods for pruning edges in order to display only those interactions that are significant given the context.
