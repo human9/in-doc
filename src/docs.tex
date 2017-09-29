@@ -1,5 +1,6 @@
 \documentclass[a4paper,12pt]{article}
 \usepackage{graphicx}
+\usepackage{hyperref}
 
 \title{InsituNet Application for Cytoscape \\ \large User Documentation}
 
@@ -15,7 +16,7 @@ In situ sequencing is a novel method to generate spatially-resolved, in situ RNA
 \clearpage
 
 \section{Introduction}
-Welcome to the InsituNet user documentation. This documentation aims to be a complete description of the functionality and user-interface of InsituNet. It also contains step-by-step examples of using InsituNet to analyze and visualize spatially-aware gene expression data.
+Welcome to the InsituNet user documentation. This document describes the functionality and user-interface of InsituNet.
 
 \begin{figure}[htb]
 	\caption{Screenshot of Cytoscape 3.5.1 running InsituNet}\label{fig:shot}
@@ -33,6 +34,7 @@ InsituNet is an app (plugin) that runs inside of Cytoscape. Its chief purpose is
 
 The networks represent \emph{spatial co-expression} relationships. If you have two nodes joined by a link you know that the two transcripts those nodes represent are close by each other (at least once). InsituNet also provides options for filtering these relationships so that only the most significant co-expressions are shown as edges. The distance used as "co-expression distance" is also user-adjustable, and you may wish to make it longer or shorter depending on whether you are interested in inter or intra-cellular distances.
 
+
 \subsection{Input format}
 InsituNet requires a file of comma-separated values (csv) as input. In this file, there should be at least 3 columns, one for the name of the transcript, and two for x and y coordinates. The first row in the csv file should be headers (eg. name, x, y). Each row after the header represents a single transcript detection. The exact name of the headers and their order is not important as you will be prompted to check that the correct columns are selected on import. An example input file is seen here:
 
@@ -46,9 +48,28 @@ InsituNet requires a file of comma-separated values (csv) as input. In this file
 \end{tabular}
 \end{center}
 
+\subsection{Getting started}
+You can install InsituNet by searching for it within the Cytoscape app store, accessible either from within Cytoscape itself or by navigating to  \url{http://apps.cytoscape.org/apps/insitunet}. Once installed, InsituNet may be started from the 'apps' menu by selecting `Apps - Import InsituNet data'. Select a valid csv file. There are example datasets available from You will then be asked to choose which columns in the csv file correspond to the name of the transcript, x coordinate, and y coordinate, as seen in figure \ref{fig:sel}.
+\begin{figure}[htb]
+ 	\caption{The file import dialog, in which the relevant columns may be chosen.}\label{fig:sel}
+ 	\centering
+ 	\includegraphics[width=0.8\textwidth]{sel}
+\end{figure}
+At this point, you may simply select the `Generate network(s)' button to create a network using the default settings from this network! The controls are explained in further detail in following sections.
+
+
 \section{InsituNet control panel}
 
-The InsituNet control panel is the central point for managing all aspects of InsituNet. It contains various collapsible sub-panels, each controlling a different aspect of how networks are created. This panel is only visible once a dataset has been successfully imported. On successful import, the name of the file will be visible at the top of the panel, in a combobox. This box allows switching between different datasets in the case that you import more than one. Directly to the right is a menubutton containing options for the selected dataset. `About' will allow the user to see how many unique types, and how many transcripts in total are within the selected dataset. `Delete' is reasonable self-explanatory. Directly below this is the sync-subpanel. This is initially empty, but when you choose to synchronise the layouts of your networks, those networks will appear here. You can also choose which layout algorithm to use, and remove datasets as required. An additional option is available to highlight unique edges, which will change the network style to display edges that only occur in one synchronised dataset in red.
+The InsituNet control panel is the central point for managing all aspects of InsituNet. It contains various collapsible sub-panels, each controlling a different aspect of how networks are created. This panel is only visible once a dataset has been successfully imported. On successful import, the name of the file will be visible at the top of the panel, in a combobox. This box allows switching between different datasets in the case that you import more than one. Directly to the right is a menubutton containing options for the selected dataset. `About' will allow the user to see how many unique types, and how many transcripts in total are within the selected dataset. `Delete' is reasonable self-explanatory.
+
+\subsection{Sync panel}
+The first expandable panel contains the synchronisation list, as seen in figure \ref{fig:sync}. In order to facilitate comparison across multiple areas and tissues, InsituNet provides the means to synchronise the layouts of any networks which are added to this list. This is initially empty, but when you choose to add networks to the sync list from the dataset-specific network list, those networks will appear here. You can also choose which layout algorithm to use, and remove datasets as desired. An additional option is available to highlight unique edges, which will change the network style to display edges that only occur in one synchronised dataset in red. Use the synchronisation button at the bottom of the panel to force re-synchronisation after changing other parameters.
+
+\begin{figure}[htb]
+	\caption{The synchronisation sub-panel, containing options for keeping network layouts synchronised across multiple networks.}\label{fig:sync}
+	\centering
+	\includegraphics[width=0.8\textwidth]{sync}
+\end{figure}
 
 \subsection{Network list}
 All the controls mentioned so far have been global; that is, they are not dataset-specific. All controls from here on will be applied specifically to the currently selected dataset. The first of the dataset-specific sub-panels is the Network List. The network list panel contains all networks generated for this dataset. When clicked, the current network view will switch the the selected network. This panel also contains the `Overwrite selected network' option, which causes whatever network is highlighted to be reused when you generate a network (the default behaviour is to create a new entry)\footnote{Tip: If you are simply exploring a dataset or testing the parameters and don't need to retain the networks you are generating, it is recommended to use this option, as it will prevent your network list from becoming needlessly cluttered. Make sure to turn it off again if you generate a network you want to keep!}, as well as synchronisation-specific options.
@@ -58,8 +79,13 @@ In the distance control panel the pixel distance to be used for defining co-expr
 \subsection{Region selection}
 The region selection panel provides the option to use an automatic sliding window of given dimensions. If this is chosen, the dataset will be divided into the chosen number of rectangular windows with the given overlap. This panel also provides the option for using the full dataset as background. This changes the co-expression significance calculations to take into account the total abundance, rather than just the abundance within the selection area.
 \subsection{Significance filtering}
-The main panel for adjusting how significance is assessed. There are three test options, Label shuffle, hypergeometric test, and no filtering. No filtering will cause any co-expressed transcripts to have an edge drawn between them. The label shuffle and hypergeometric tests will both attempt to rate the significance of edges, as described in more detail in section \ref{filtering}.
+The main panel for adjusting how significance is assessed, seen in figure \ref{fig:sig}. There are three test options, Label shuffle, hypergeometric test, and no filtering. No filtering will cause any co-expressed transcripts to have an edge drawn between them. The label shuffle and hypergeometric tests will both attempt to rate the significance of edges, as described in more detail in section \ref{filtering}.
 
+\begin{figure}[htb]
+	\caption{The significance sub-panel, allows selection of desired filtering test, whether to only show co-expression occurring more or less than expected, setting of p-value cutoff, Z-score to use as maximum edge thickness, and whether to use correction for multiple testing.}\label{fig:sig}
+	\centering
+	\includegraphics[width=0.8\textwidth]{sync}
+\end{figure}
 
 \subsection{Tissue reconstruction}
 The tissue reconstruction is likely where you will start in order to explore and check the data that you have just imported. It can initially be found at the bottom of the InsituNet panel. This view can be panned (left click + drag), zoomed (mouse wheel), and rotated (wheel / middle button + drag vertically) using the mouse. It is also possible to select individual transcripts to view their name. The controls as numbered in \ref{fig:recon_details} are as follows:
@@ -102,6 +128,18 @@ The shuffle and hypergeometric tests are both statistical methods for pruning ed
 
 \subsection{Filtering (hypergeometric)}
 The hypergeometric test is provided as an alternative to the label shuffle method. Occasionally the label shuffle rates lowly-occuring co-expressions annoyingly highly, while the hypergeometric test can be less susceptible to this.
+By using the hypergeometric distribution, the significance of drawing k coexpressions
+of transcripts a and b can be assessed by fitting the following variables to the
+hypergeometric test parameters:
+\begin{itemize}
+\item N - total co-expressions between all transcripts.
+\item k - total co-expressions between transcripts a and b.
+\item n – number of co-expressions involving any a transcripts.
+\item K – number of co-expressions involving any b transcripts.
+\end{itemize}
+
+In comparison to the label permutation method, the hypergeometric test fully considers the compound probability of obtaining a certain number of co-expressions given their abundances.
+
 
 \subsection{Display}
 The final networks will be assigned a visual style in which node size is proportional to relative abundance of their transcript, and edge width is proportional to the Z-score ranking of the co-expression it represents. To allow for customisation of this, the Z-score can be set to any value, adjustable within the significance sub-panel.
