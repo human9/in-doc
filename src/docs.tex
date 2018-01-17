@@ -34,6 +34,15 @@ InsituNet is an app (plugin) that runs inside of Cytoscape. Its chief purpose is
 
 The networks represent \emph{spatial co-expression} relationships. If you have two nodes joined by a link you know that the two transcripts those nodes represent are close by each other (at least once). InsituNet also provides options for filtering these relationships so that only the most significant co-expressions are shown as edges. The distance used as "co-expression distance" is also user-adjustable, and you may wish to make it longer or shorter depending on whether you are interested in inter or intra-cellular distances.
 
+\subsection{Installation}
+If you do not have Cytoscape already installed please download and install the latest version from http://cytoscape.org. The download should be around 100MB and not take long to install on a modern computer. Once Cytoscape is installed, there are many options for installing InsituNet.
+\begin{enumerate}
+	\item Option 1 - Download and install from within Cytoscape.
+		\begin{enumerate}
+			\item Launch Cytoscape and open the app manager, from Apps -> App Manager.
+			\item Select InsituNet from the drop down list, then click Install.
+		\end{enumerate}
+\end{enumerate}
 
 \subsection{Input format}
 InsituNet requires a file of comma-separated values (csv) as input. In this file, there should be at least 3 columns, one for the name of the transcript, and two for x and y coordinates. The first row in the csv file should be headers (eg. name, x, y). Each row after the header represents a single transcript detection. The exact name of the headers and their order is not important as you will be prompted to check that the correct columns are selected on import. An example input file is seen here:
